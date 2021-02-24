@@ -3,13 +3,25 @@ import {
   InputGroupText,
   InputGroupAddon,
   Input,
-  Table
+  Table,
+  Badge
 } from 'reactstrap';
 
 
-const ListContributors = ({ contributors}) => {
-  console.log("Num repositories", contributors.length)
+const ProfileLogo = ({username, avatarUrl, profileUrl}) => (
+  <div className="profile-info">
+    <img alt="avatar" src={avatarUrl} className="avatar"></img>
+    <a
+      className="username"
+      href={profileUrl}
+      target="_blank"
+      rel="noreferrer"
+      >@{username}</a>
+  </div>
+)
 
+
+const ListContributors = ({ contributors}) => {
       return (<div className="center">
         <div className="org_search">
           <InputGroup>
@@ -21,38 +33,33 @@ const ListContributors = ({ contributors}) => {
           <br></br>
 
         </div>
-        <Table hover>
-          <thead>
+        <Table hover className="table table-fit">
+          <thead className="profile-info">
             <tr>
-              <th>Username</th>
+              <th>Contributor</th>
               <th>Contributions</th>
-              <th>First Name</th>
-              <th>Last Name</th>
+              <th>Followers</th>
+              <th>Repositories</th>
+              <th>Gists</th>
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>@twitter</td>
-              <td>2000</td>
-              <td>Larry</td>
-              <td>the Bird</td>
-            </tr>
-            <tr>
-              <td>@mdo</td>
-              <td>200</td>
-              <td>Mark</td>
-              <td>Otto</td>
-            </tr>
-            <tr>
-              <td>@fat</td>
-              <td>10000</td>
-              <td>Jacob</td>
-              <td>Thornton</td>
-            </tr>
+            {contributors.map((contributor)  => (
+              <tr>
+                <td>
+                  <ProfileLogo
+                    username={contributor.login}
+                    avatarUrl={contributor.avatar_url}
+                    profileUrl={contributor.html_url}/>
+                  </td>
+                <td><Badge pill>{contributor.contributions}</Badge></td>
+                <td><Badge pill>{contributor.followers}</Badge></td>
+                <td><Badge pill>{contributor.repos}</Badge></td>
+                <td><Badge pill>{contributor.gists}</Badge></td>
+              </tr>))}
           </tbody>
         </Table>
       </div>)
-
 }
 
 export default ListContributors;
