@@ -46,3 +46,27 @@
 .org_search {
   margin-right: 50%;
 }
+
+.avatar {
+  border-radius: 50%;
+  width: 10%;
+}
+
+.username {
+  padding: 10px;
+}
+
+.profile-info {
+  text-align: left;
+}
+
+table.table-fit {
+    width: auto !important;
+    table-layout: auto !important;
+}
+table.table-fit thead th, table.table-fit tfoot th {
+    width: auto !important;
+}
+table.table-fit tbody td, table.table-fit tfoot td {
+    width: auto !important;
+}
