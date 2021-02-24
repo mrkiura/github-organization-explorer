@@ -8,7 +8,7 @@ import {
 
 
 const ListContributors = ({ contributors}) => {
-  console.log("Num repositories", repositories.length)
+  console.log("Num repositories", contributors.length)
 
       return (<div className="center">
         <div className="org_search">
