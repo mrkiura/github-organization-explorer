@@ -36,3 +36,13 @@
     transform: rotate(360deg);
   }
 }
+
+.center {
+  padding: 70px 0;
+  border: 3px;
+  text-align: center;
+}
+
+.org_search {
+  margin-right: 50%;
+}
