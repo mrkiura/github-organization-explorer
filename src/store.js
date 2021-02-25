@@ -1954,7 +1954,8 @@ const initialState = {
         selectedPage: 1,
         pageLimit: 8,
         pageCount: null
-    }
+    },
+    organization: 'angular'
 };
 
 const useValue = () => useState(initialState);

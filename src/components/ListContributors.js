@@ -13,6 +13,8 @@ import { usePaginate } from '../hooks/usePaginate';
 import { usePageInfo } from '../hooks/usePageInfo';
 import { useContributorList } from '../hooks/useContributorList'
 import { useSortData } from '../hooks/useSortData';
+import { useGithubOrg } from '../hooks/useGithubOrg';
+
 import { Sorter } from './Sorter';
 import { ContributorRow } from './ContributorRow';
 import { Paginator } from './Paginator';
@@ -21,6 +23,7 @@ import { Paginator } from './Paginator';
 const ListContributors = () => {
   const contributors = useContributorList();
   const { getPageInfo, setPageInfo } = usePageInfo()
+  const { getGithubOrg, setGithubOrg } = useGithubOrg()
   let  { selectedPage, pageLimit, pageCount } = getPageInfo();
   pageCount = Math.ceil(contributors.length / pageLimit);
   const { page } = usePaginate(contributors, pageLimit, selectedPage);
@@ -43,7 +46,7 @@ const ListContributors = () => {
                       <InputGroupAddon addonType="prepend">
                         <InputGroupText>Organization</InputGroupText>
                       </InputGroupAddon>
-                      <Input defaultValue="angular"/>
+                      <Input defaultValue={getGithubOrg()} onChange={(e) => {setGithubOrg(e.target.value)}}/>
                     </InputGroup>
                     <br></br>
                   </div>
