@@ -1,65 +1,59 @@
+import React from 'react';
 import {
   InputGroup,
   InputGroupText,
   InputGroupAddon,
   Input,
   Table,
-  Badge
+  Container,
+  Row,
+  Col
 } from 'reactstrap';
+import { useContributorList } from '../hooks/useContributorList'
+import { Sorter } from './Sorter';
+import { ContributorRow } from './ContributorRow';
 
 
-const ProfileLogo = ({username, avatarUrl, profileUrl}) => (
-  <div className="profile-info">
-    <img alt="avatar" src={avatarUrl} className="avatar"></img>
-    <a
-      className="username"
-      href={profileUrl}
-      target="_blank"
-      rel="noreferrer"
-      >@{username}</a>
-  </div>
-)
-
-
-const ListContributors = ({ contributors}) => {
-      return (<div className="center">
-        <div className="org_search">
-          <InputGroup>
-            <Input defaultValue="angular"/>
-            <InputGroupAddon addonType="append">
-              <InputGroupText>Submit</InputGroupText>
-            </InputGroupAddon>
-          </InputGroup>
-          <br></br>
-
-        </div>
-        <Table hover className="table table-fit">
-          <thead className="profile-info">
-            <tr>
-              <th>Contributor</th>
-              <th>Contributions</th>
-              <th>Followers</th>
-              <th>Repositories</th>
-              <th>Gists</th>
-            </tr>
-          </thead>
-          <tbody>
-            {contributors.map((contributor)  => (
-              <tr>
-                <td>
-                  <ProfileLogo
-                    username={contributor.login}
-                    avatarUrl={contributor.avatar_url}
-                    profileUrl={contributor.html_url}/>
-                  </td>
-                <td><Badge pill>{contributor.contributions}</Badge></td>
-                <td><Badge pill>{contributor.followers}</Badge></td>
-                <td><Badge pill>{contributor.repos}</Badge></td>
-                <td><Badge pill>{contributor.gists}</Badge></td>
-              </tr>))}
-          </tbody>
-        </Table>
-      </div>)
+const ListContributors = () => {
+  const contributors = useContributorList();
+      return (
+        <Container>
+          <div className="center">
+            <Row>
+              <Col sm={{ size: 6, offset: 1 }}>
+                <div className="org_search">
+                    <InputGroup>
+                      <InputGroupAddon addonType="prepend">
+                        <InputGroupText>Organization</InputGroupText>
+                      </InputGroupAddon>
+                      <Input defaultValue="angular"/>
+                    </InputGroup>
+                    <br></br>
+                  </div>
+              </Col>
+              <Col sm={{ size: 1, offset: 1 }}><Sorter /></Col>
+            </Row>
+            <Row className="justify-content-between">
+              <Table hover >
+                <thead className="profile-info">
+                  <tr>
+                    <th>Contributor</th>
+                    <th>Contributions</th>
+                    <th>Followers</th>
+                    <th>Repositories</th>
+                    <th>Gists</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {contributors.map((contributor, index)  => (
+                    <ContributorRow contributor={contributor} key={index}/>
+                    ))}
+                </tbody>
+              </Table>
+            </Row>
+          </div>
+        </Container>
+      )
 }
 
 export default ListContributors;

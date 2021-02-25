@@ -1,12 +1,13 @@
 import './App.css';
-
+import { Provider} from './store';
 import ListContributors from './components/ListContributors';
-import { contributors } from './store';
 
 
 const App = () => {
   return (
-    <ListContributors contributors={contributors}/>
+    <Provider>
+      <ListContributors/>
+    </Provider>
   );
 }
 
