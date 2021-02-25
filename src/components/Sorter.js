@@ -7,8 +7,7 @@ import {
 import { useDropdownToggle} from '../hooks/useDropdownToggle';
 
 
-export const Sorter = () => {
-
+export const Sorter = ({ handleSort}) => {
     const { getDropdowntoggle, setDropdowntoggle } = useDropdownToggle();
     return (
       <div>
@@ -20,10 +19,10 @@ export const Sorter = () => {
             Sort by
           </DropdownToggle>
           <DropdownMenu>
-            <DropdownItem>Contributions</DropdownItem>
-            <DropdownItem>Followers</DropdownItem>
-            <DropdownItem>Repositories</DropdownItem>
-            <DropdownItem>Gists</DropdownItem>
+            <DropdownItem onClick={() => handleSort('contributions')}>Contributions</DropdownItem>
+            <DropdownItem onClick={() => handleSort('followers')}>Followers</DropdownItem>
+            <DropdownItem onClick={() => handleSort('repos')}>Repositories</DropdownItem>
+            <DropdownItem onClick={() => handleSort('gists')}>Gists</DropdownItem>
           </DropdownMenu>
         </ButtonDropdown>
       </div>
