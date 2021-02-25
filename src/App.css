@@ -63,3 +63,15 @@
 .contributors {
   padding-top: 15%;
 }
+
+th.ascending::after {
+  content: '🔼';
+  display: inline-block;
+  margin-left: 2px;
+}
+
+th.descending::after {
+  content: '🔽';
+  display: inline-block;
+  margin-left: 2px;
+}

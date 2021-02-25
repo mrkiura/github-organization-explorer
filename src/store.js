@@ -265,7 +265,11 @@ const contributors = [
 const initialState = {
     repositories: [...repositories],
     contributors: [...contributors],
-    dropdownToggle: false
+    dropdownToggle: false,
+    sortConfig: {
+        key: '',
+        direction: ''
+    },
 };
 
 const useValue = () => useState(initialState);
