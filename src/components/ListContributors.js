@@ -9,22 +9,29 @@ import {
   Row,
   Col
 } from 'reactstrap';
+import { usePaginate } from '../hooks/usePaginate';
+import { usePageInfo } from '../hooks/usePageInfo';
 import { useContributorList } from '../hooks/useContributorList'
 import { useSortData } from '../hooks/useSortData';
 import { Sorter } from './Sorter';
 import { ContributorRow } from './ContributorRow';
+import { Paginator } from './Paginator';
 
 
 const ListContributors = () => {
   const contributors = useContributorList();
-  const { sortedData, sortConfig, setSortConfig } = useSortData(contributors);
+  const { getPageInfo, setPageInfo } = usePageInfo()
+  let  { selectedPage, pageLimit, pageCount } = getPageInfo();
+  pageCount = Math.ceil(contributors.length / pageLimit);
+  const { page } = usePaginate(contributors, pageLimit, selectedPage);
+  const { sortedData, sortConfig, setSortConfig } = useSortData(page);
+
   const getClassNamesFor = (name) => {
     if (!sortConfig) {
       return;
     }
     return sortConfig.key === name ? sortConfig.direction : undefined;
   };
-
 
       return (
         <Container>
@@ -65,6 +72,13 @@ const ListContributors = () => {
                     ))}
                 </tbody>
               </Table>
+            </Row>
+            <Row >
+              <Col sm="12" md={{ size: 6, offset: 3 }}>
+                <Paginator
+                  pageCount={pageCount}
+                  onPageChange={(data) => {setPageInfo(data.selected + 1, pageCount)}}/>
+              </Col>
             </Row>
           </div>
         </Container>
