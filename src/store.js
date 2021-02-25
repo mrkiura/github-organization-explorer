@@ -1,3 +1,8 @@
+import { useState, useCallback } from 'react';
+import { createContainer } from 'react-tracked';
+import produce from 'immer';
+
+
 const repositories = [
     {
         "id": 336777,
@@ -256,4 +261,27 @@ const contributors = [
     }
 ];
 
-export { contributors, repositories };
+
+const initialState = {
+    repositories: [...repositories],
+    contributors: [...contributors],
+    dropdownToggle: false
+};
+
+const useValue = () => useState(initialState);
+
+const { Provider, useTrackedState, useUpdate: useSetState } = createContainer(
+  useValue,
+);
+
+const useSetDraft = () => {
+  const setState = useSetState();
+  return useCallback(
+    draftUpdater => {
+      setState(produce(draftUpdater));
+    },
+    [setState],
+  );
+};
+
+export { Provider, useTrackedState, useSetDraft };

@@ -1,54 +1,21 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   InputGroup,
   InputGroupText,
   InputGroupAddon,
   Input,
   Table,
-  Badge,
-  ButtonDropdown,
-  DropdownToggle,
-  DropdownMenu,
-  DropdownItem,
   Container,
   Row,
   Col
 } from 'reactstrap';
+import { useContributorList } from '../hooks/useContributorList'
+import { Sorter } from './Sorter';
+import { ContributorRow } from './ContributorRow';
 
 
-const ProfileLogo = ({username, avatarUrl, profileUrl}) => (
-  <div className="profile-info">
-    <img alt="avatar" src={avatarUrl} className="avatar"></img>
-    <a
-      className="username"
-      href={profileUrl}
-      target="_blank"
-      rel="noreferrer"
-      >@{username}</a>
-  </div>
-)
-
-const Sorter = () => {
-  const [dropdownOpen, setOpen] = useState(false);
-
-  const toggle = () => setOpen(!dropdownOpen);
-  return (
-    <div>
-      <ButtonDropdown direction="right" isOpen={dropdownOpen} toggle={toggle}>
-        <DropdownToggle caret>
-          Sort by
-        </DropdownToggle>
-        <DropdownMenu>
-          <DropdownItem>Contributions</DropdownItem>
-          <DropdownItem>Followers</DropdownItem>
-          <DropdownItem>Repositories</DropdownItem>
-          <DropdownItem>Gists</DropdownItem>
-        </DropdownMenu>
-      </ButtonDropdown>
-    </div>
-)}
-
-const ListContributors = ({ contributors}) => {
+const ListContributors = () => {
+  const contributors = useContributorList();
       return (
         <Container>
           <div className="center">
@@ -78,24 +45,13 @@ const ListContributors = ({ contributors}) => {
                   </tr>
                 </thead>
                 <tbody>
-                  {contributors.map((contributor)  => (
-                    <tr>
-                      <td>
-                        <ProfileLogo
-                          username={contributor.login}
-                          avatarUrl={contributor.avatar_url}
-                          profileUrl={contributor.html_url}/>
-                        </td>
-                      <td><Badge pill>{contributor.contributions}</Badge></td>
-                      <td><Badge pill>{contributor.followers}</Badge></td>
-                      <td><Badge pill>{contributor.repos}</Badge></td>
-                      <td><Badge pill>{contributor.gists}</Badge></td>
-                    </tr>))}
+                  {contributors.map((contributor, index)  => (
+                    <ContributorRow contributor={contributor} key={index}/>
+                    ))}
                 </tbody>
               </Table>
             </Row>
           </div>
-
         </Container>
       )
 }
