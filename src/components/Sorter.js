@@ -21,7 +21,7 @@ export const Sorter = ({ handleSort}) => {
           <DropdownMenu>
             <DropdownItem onClick={() => handleSort('contributions')}>Contributions</DropdownItem>
             <DropdownItem onClick={() => handleSort('followers')}>Followers</DropdownItem>
-            <DropdownItem onClick={() => handleSort('repos')}>Repositories</DropdownItem>
+            <DropdownItem onClick={() => handleSort('publicRepos')}>Public Repos</DropdownItem>
             <DropdownItem onClick={() => handleSort('gists')}>Gists</DropdownItem>
           </DropdownMenu>
         </ButtonDropdown>
