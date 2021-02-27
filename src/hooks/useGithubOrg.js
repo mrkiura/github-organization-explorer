@@ -9,9 +9,9 @@ export const useGithubOrg = () => {
 
     const setGithubOrg = useCallback(
         organization => {
-            console.log("Org", organization)
             setDraft((draft) => {
                 draft.organization = organization;
+                draft.contributors = [];
             })
         },
         [setDraft],
