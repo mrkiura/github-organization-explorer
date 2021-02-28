@@ -17,4 +17,4 @@ export const usePageInfo = () => {
         [setDraft],
     );
     return { getPageInfo, setPageInfo };
-}
+};

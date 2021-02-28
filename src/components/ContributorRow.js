@@ -6,13 +6,13 @@ export const ContributorRow = ( { contributor } ) => {
       <tr>
         <td>
           <ProfileInfo
-            username={contributor.login}
-            avatarUrl={contributor.avatar_url}
-            profileUrl={contributor.html_url}/>
+            username={contributor.username}
+            avatarUrl={contributor.avatarUrl}
+            profileUrl={contributor.htmlUrl}/>
           </td>
         <td><Badge pill>{contributor.contributions}</Badge></td>
         <td><Badge pill>{contributor.followers}</Badge></td>
-        <td><Badge pill>{contributor.repos}</Badge></td>
+        <td><Badge pill>{contributor.publicRepos}</Badge></td>
         <td><Badge pill>{contributor.gists}</Badge></td>
       </tr>
     )
