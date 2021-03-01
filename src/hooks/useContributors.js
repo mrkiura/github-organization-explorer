@@ -9,8 +9,11 @@ export const useContributors = () => {
 
     const addContributors = useCallback(
         (contributors) => {
+            if (!contributors) {
+                return;
+            }
             setDraft((draft) => {
-                draft.contributors = [...contributors];
+                draft.contributors = [...draft.contributors, ...contributors];
             })
         },
         [setDraft],
