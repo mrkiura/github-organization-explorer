@@ -7,7 +7,7 @@ import {
 import { useDropdownToggle} from '../hooks/useDropdownToggle';
 
 
-export const Sorter = ({ handleSort }) => {
+export const RepoSorter = ({ handleSort }) => {
     const { getDropdowntoggle, setDropdowntoggle } = useDropdownToggle();
     return (
       <div>
