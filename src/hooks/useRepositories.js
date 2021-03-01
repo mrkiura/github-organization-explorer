@@ -13,10 +13,22 @@ export const useRepositories = () => {
                 return;
             }
             setDraft((draft) => {
-                draft.repositories = [...draft.repositories, ...repositories];
+                draft.repositories = [...new Set([...draft.repositories, ...repositories])];
             })
         },
         [setDraft],
     );
-    return { getRepositories, addRepositories };
+
+    const setRepositories= useCallback(
+        (repositories) => {
+            if (!repositories) {
+                return;
+            }
+            setDraft((draft) => {
+                draft.repositories = repositories;
+            })
+        },
+        [setDraft],
+    );
+    return { getRepositories, addRepositories, setRepositories };
 };

@@ -16,41 +16,44 @@ import { useRepositories } from '../hooks/useRepositories';
 import { useSortData } from '../hooks/useSortData';
 import { useGithubOrg } from '../hooks/useGithubOrg';
 import { getRepoContributorStream, fetchContributorDetails, fetchRepositories} from '../hooks/useGithubData';
-
 import { Sorter } from './Sorter';
 import { ContributorRow } from './ContributorRow';
 import { Paginator } from './Paginator';
 import { getClassNamesFor } from '../utils';
+import { useRepoContributors } from '../hooks/useRepoContributors'
 
 
 const ListContributors = () => {
   const { getGithubOrg, setGithubOrg } = useGithubOrg()
   const { addContributors, getContributors } = useContributors();
-  const { addRepositories, getRepositories } = useRepositories();
+  const { addRepositories } = useRepositories();
+  const { addContributorsToRepo } = useRepoContributors();
   const githubOrg = getGithubOrg();
   useEffect(() => {
 
     (async () => {
-      for await (let repo of fetchRepositories(githubOrg)) {
-        const streamPromise = getRepoContributorStream(repo.full_name);
-        streamPromise.then(stream => {
-          const reader = stream.getReader();
-          reader.read().then(async({ done, value } ) => {
-              if (done) {
-                  return;
-              } else {
-                
-                addRepositories(value);
-              }
-              const cleanedContributors = await fetchContributorDetails(value)
-              Promise.all(cleanedContributors).then((contributors) => {
-                  addContributors(contributors);
-              })
+      const repos = await fetchRepositories(githubOrg)
+      if (repos) {
+        for await (let repo of repos) {
+          const repoFullName = repo.full_name
+          const streamPromise = getRepoContributorStream(repoFullName);
+          streamPromise.then(stream => {
+            const reader = stream.getReader();
+            reader.read().then(async({ done, value } ) => {
+                if (done) {
+                    return;
+                }
+                const cleanedContributors = await fetchContributorDetails(value)
+                Promise.all(cleanedContributors).then((contributors) => {
+                    addContributors(contributors);
+                    addContributorsToRepo(contributors, repo.name);
+                })
+            })
           })
-        })
+        }
       }
     })()
-  }, [ addContributors, githubOrg, addRepositories ]);
+  }, [ addContributors, githubOrg, addRepositories, addContributorsToRepo ]);
 
   const { getPageInfo, setPageInfo } = usePageInfo()
   const contributors = getContributors();

@@ -6,6 +6,8 @@ import produce from 'immer';
 const initialState = {
     repositories: [],
     contributors: [],
+    repoContributors: {},
+    contributorRepos: {},
     dropdownToggle: false,
     sortConfig: {
         key: '',
