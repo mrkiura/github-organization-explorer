@@ -14,7 +14,7 @@ import { usePageInfo } from '../hooks/usePageInfo';
 import { useContributors } from '../hooks/useContributors'
 import { useSortData } from '../hooks/useSortData';
 import { useGithubOrg } from '../hooks/useGithubOrg';
-import { updateContributors, fetchContributorDetails } from '../hooks/useGithubData';
+import { getRepoContributorStream, fetchContributorDetails, fetchRepositories} from '../hooks/useGithubData';
 
 import { Sorter } from './Sorter';
 import { ContributorRow } from './ContributorRow';
@@ -24,20 +24,29 @@ import { getClassNamesFor } from '../utils';
 
 const ListContributors = () => {
   const { getGithubOrg, setGithubOrg } = useGithubOrg()
-  const { getContributors, addContributors } = useContributors();
-
+  const { addContributors, getContributors } = useContributors();
+  const githubOrg = getGithubOrg();
   useEffect(() => {
-    const contributors = updateContributors('angular');
-    contributors.then((results) => {
-      const contributorPromises = fetchContributorDetails(results)
-      contributorPromises.then((contributorTasks) => {
-        Promise.all(contributorTasks).then((contributors) => {
-          addContributors(contributors.values());
-        })
-      })
-    })
 
-  }, [ addContributors ]);
+    (async () => {
+      for await (let repo of fetchRepositories(githubOrg)) {
+        const streamPromise = getRepoContributorStream(repo.full_name);
+        streamPromise.then(stream => {
+          const reader = stream.getReader();
+          reader.read().then(async({ done, value } ) => {
+              if (done) {
+                  return;
+              } else {
+              }
+              const cleanedContributors = await fetchContributorDetails(value)
+              Promise.all(cleanedContributors).then((contributors) => {
+                  addContributors(contributors);
+              })
+          })
+        })
+      }
+    })()
+  }, [ addContributors, githubOrg ]);
 
   const { getPageInfo, setPageInfo } = usePageInfo()
   const contributors = getContributors();
