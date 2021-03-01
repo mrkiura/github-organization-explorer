@@ -1,8 +1,9 @@
 import './App.css';
 import { Provider} from './store';
 import ListContributors from './components/ListContributors';
+import { RepoDetail } from './components/RepoDetail';
 import ListRepositories from './components/ListRepositories';
-import { TabContent, TabPane, Nav, NavItem, NavLink } from 'reactstrap';
+import { TabContent, TabPane, Nav, NavItem, NavLink, Container } from 'reactstrap';
 
 import { useState } from 'react';
 import classnames from 'classnames';
@@ -16,13 +17,14 @@ const App = () => {
   return (
 
     <Provider>
+      <Container fluid="sm">
     <div className="center">
       <Nav tabs>
         <NavItem>
           <NavLink
             className={classnames({ active: activeTab === '1' })}
             onClick={() => { toggle('1'); }}
-          >
+            >
             Home
           </NavLink>
         </NavItem>
@@ -30,20 +32,22 @@ const App = () => {
           <NavLink
             className={classnames({ active: activeTab === '2' })}
             onClick={() => { toggle('2'); }}
-          >
+            >
             Repositories
           </NavLink>
         </NavItem>
       </Nav>
       <TabContent activeTab={activeTab}>
         <TabPane tabId="1">
-          <ListContributors />
+          <ListContributors toggle={toggle}/>
         </TabPane>
         <TabPane tabId="2">
-          <ListRepositories />
+          {/* <RepoDetail /> */}
+          <ListRepositories toggleScreen={() => { toggle('3'); }}/>
         </TabPane>
       </TabContent>
     </div>
+    </Container>
     </Provider>
   );
 }

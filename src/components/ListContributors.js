@@ -46,7 +46,7 @@ const ListContributors = () => {
                 const cleanedContributors = await fetchContributorDetails(value)
                 Promise.all(cleanedContributors).then((contributors) => {
                     addContributors(contributors);
-                    addContributorsToRepo(contributors, repo.name);
+                    addContributorsToRepo(contributors, repo);
                 })
             })
           })
