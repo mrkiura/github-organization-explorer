@@ -11,7 +11,8 @@ import {
 } from 'reactstrap';
 import { usePaginate } from '../hooks/usePaginate';
 import { usePageInfo } from '../hooks/usePageInfo';
-import { useContributors } from '../hooks/useContributors'
+import { useContributors } from '../hooks/useContributors';
+import { useRepositories } from '../hooks/useRepositories';
 import { useSortData } from '../hooks/useSortData';
 import { useGithubOrg } from '../hooks/useGithubOrg';
 import { getRepoContributorStream, fetchContributorDetails, fetchRepositories} from '../hooks/useGithubData';
@@ -25,6 +26,7 @@ import { getClassNamesFor } from '../utils';
 const ListContributors = () => {
   const { getGithubOrg, setGithubOrg } = useGithubOrg()
   const { addContributors, getContributors } = useContributors();
+  const { addRepositories, getRepositories } = useRepositories();
   const githubOrg = getGithubOrg();
   useEffect(() => {
 
@@ -37,6 +39,8 @@ const ListContributors = () => {
               if (done) {
                   return;
               } else {
+                
+                addRepositories(value);
               }
               const cleanedContributors = await fetchContributorDetails(value)
               Promise.all(cleanedContributors).then((contributors) => {
@@ -46,7 +50,7 @@ const ListContributors = () => {
         })
       }
     })()
-  }, [ addContributors, githubOrg ]);
+  }, [ addContributors, githubOrg, addRepositories ]);
 
   const { getPageInfo, setPageInfo } = usePageInfo()
   const contributors = getContributors();
