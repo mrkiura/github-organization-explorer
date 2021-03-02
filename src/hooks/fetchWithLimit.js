@@ -1,4 +1,4 @@
-export function rateLimitMap(array, requestsPerSec, maxInFlight, fn) {
+export function fetchWithLimit(array, requestsPerSec, maxInFlight, fn) {
     return new Promise(function (resolve, reject) {
         var index = 0;
         var inFlightCntr = 0;
