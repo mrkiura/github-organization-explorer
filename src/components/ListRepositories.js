@@ -14,17 +14,15 @@ import { usePageInfo } from '../hooks/usePageInfo';
 import { useRepositories } from '../hooks/useRepositories';
 import { useSortData } from '../hooks/useSortData';
 import { useGithubOrg } from '../hooks/useGithubOrg';
-import { fetchRepositories } from '../hooks/useGithubData';
-
 import { Sorter } from './Sorter';
 import { RepositoryRow } from './RepositoryRow';
 import { Paginator } from './Paginator';
 import { getClassNamesFor } from '../utils';
 
-const ListRepositories = () => {
+
+const ListRepositories = ({ toggleScreen }) => {
     const { getGithubOrg, setGithubOrg } = useGithubOrg();
-    const { getRepositories, setRepositories } = useRepositories();
-    const githubOrg = getGithubOrg();
+    const { getRepositories } = useRepositories();
 
     const { getPageInfo, setPageInfo } = usePageInfo();
     const repositories = getRepositories();
@@ -33,14 +31,6 @@ const ListRepositories = () => {
     const { page } = usePaginate(repositories, pageLimit, selectedPage);
 
     const { sortedData, sortConfig, setSortConfig } = useSortData(page);
-    useEffect(() => {
-        (async () => {
-            let repos = [];
-            repos = await fetchRepositories(githubOrg);
-            setRepositories(repos);
-            return;
-        })();
-    });
 
     return (
         <Container>
@@ -84,7 +74,7 @@ const ListRepositories = () => {
                         </thead>
                         <tbody>
                             {sortedData.map((repo, index) => (
-                                <RepositoryRow repo={repo} key={index} />
+                                <RepositoryRow repo={repo} key={index} toggleScreen={toggleScreen}/>
                             ))}
                         </tbody>
                     </Table>
