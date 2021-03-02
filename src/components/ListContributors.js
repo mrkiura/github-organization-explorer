@@ -31,31 +31,31 @@ const ListContributors = ({ toggleScreen }) => {
     const { addContributorsToRepo } = useRepoContributors();
     const githubOrg = getGithubOrg();
     useEffect(() => {
-        const repoStreamPromise = getRepoStream(githubOrg);
-        repoStreamPromise
-            .then((repoStream) => repoStream.getReader().read())
-            .then(({ done, value }) => {
-                return new Promise((resolve, reject) => resolve([value]));
-            })
-            .then(groupedRrepos => {
-                const flattened = groupedRrepos.flat().flat();
-                addRepositories(flattened);
-                return flattened;
-            }).then(repos => {
-                for (let repo of repos) {
-                    const contributorStreamPromise = getRepoContributorStream(repo.full_name);
-                    contributorStreamPromise.then((contrbutorStream) => {
-                        const reader = contrbutorStream.getReader();
-                        reader.read().then(async ({ done, value }) => {
-                            if (done) {
-                                return;
-                            }
-                            return await fetchContributorDetails(value);
-                        }).then(contributors => {
-                        });
-                    });
-                }
-            });
+        // const repoStreamPromise = getRepoStream(githubOrg);
+        // repoStreamPromise
+        //     .then((repoStream) => repoStream.getReader().read())
+        //     .then(({ done, value }) => {
+        //         return new Promise((resolve, reject) => resolve([value]));
+        //     })
+        //     .then(groupedRrepos => {
+        //         const flattened = groupedRrepos.flat().flat();
+        //         addRepositories(flattened);
+        //         return flattened;
+        //     }).then(repos => {
+        //         for (let repo of repos) {
+        //             const contributorStreamPromise = getRepoContributorStream(repo.full_name);
+        //             contributorStreamPromise.then((contrbutorStream) => {
+        //                 const reader = contrbutorStream.getReader();
+        //                 reader.read().then(async ({ done, value }) => {
+        //                     if (done) {
+        //                         return;
+        //                     }
+        //                     return await fetchContributorDetails(value);
+        //                 }).then(contributors => {
+        //                 });
+        //             });
+        //         }
+        //     });
     }, [addContributors, githubOrg, addRepositories, addContributorsToRepo]);
 
     const { getPageInfo, setPageInfo } = usePageInfo();

@@ -52,9 +52,9 @@ const ListRepositories = ({ toggleScreen }) => {
                             <br />
                         </div>
                     </Col>
-                    <Col sm={{ size: 1, offset: 1 }}>
+                    {/* <Col sm={{ size: 1, offset: 1 }}>
                         <Sorter handleSort={setSortConfig} sortConfig={sortConfig} />
-                    </Col>
+                    </Col> */}
                 </Row>
                 <Row className="justify-content-between">
                     <Table hover>
