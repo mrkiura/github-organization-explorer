@@ -1,18 +1,21 @@
 import { parseLink } from '../utils';
 
-const { REACT_APP_GITHUB_AUTH_TOKEN } = process.env;
+const REACT_APP_GITHUB_AUTH_TOKEN = process.env.REACT_APP_GITHUB_AUTH_TOKEN;
+
+console.log("REACT_APP_GITHUB_AUTH_TOKEN", REACT_APP_GITHUB_AUTH_TOKEN);
 
 const authHeaders = {
     'User-Agent': 'Angular-Rank',
-    'Authorization': `bearer ${REACT_APP_GITHUB_AUTH_TOKEN}`,
+    'Authorization': REACT_APP_GITHUB_AUTH_TOKEN
 };
 
-export async function fetchRepositories(organization) {
+export async function fetchRepositories (organization) {
+    console.log("auth token", REACT_APP_GITHUB_AUTH_TOKEN);
     let repoUrl = `https://api.github.com/orgs/${organization}/repos`;
     let repos = [];
     while (repoUrl) {
         const response = await fetch(repoUrl, {
-            headers: authHeaders,
+            headers: authHeaders
         });
         try {
             const body = await response.json();
@@ -32,7 +35,7 @@ export async function fetchRepositories(organization) {
 export const fetchContributorDetails = (contributors) => {
     const updatedContributors = contributors.map(async (repoContributor) => {
         const response = await fetch(repoContributor.url, {
-            headers: authHeaders,
+            headers: authHeaders
         });
         const user = await response.json();
         const username = user.login;
@@ -65,7 +68,7 @@ export const getRepoContributorStream = async (repoFullName) => {
                 let contributorsUrl = `https://api.github.com/repos/${repoFullName}/contributors`;
                 while (contributorsUrl) {
                     const response = await fetch(contributorsUrl, {
-                        headers: authHeaders,
+                        headers: authHeaders
                     });
                     try {
                         const body = await response.json();

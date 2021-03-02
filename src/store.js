@@ -10,15 +10,15 @@ const initialState = {
     dropdownToggle: false,
     sortConfig: {
         key: '',
-        direction: '',
+        direction: ''
     },
     pageInfo: {
         selectedPage: 1,
         pageLimit: 12,
-        pageCount: null,
+        pageCount: null
     },
     organization: 'angular',
-    loading: null,
+    loading: null
 };
 
 const useValue = () => useState(initialState);

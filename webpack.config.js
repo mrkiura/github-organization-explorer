@@ -1,5 +1,5 @@
-const dotenv = require('dotenv');
 const path = require('path');
+const Dotenv = require('dotenv-webpack');
 const webpack = require('webpack');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
@@ -16,11 +16,7 @@ module.exports = options => ({
         contentBase: './public'
     },
     plugins: [
-        // fix "process is not defined" error:
-        // (do "npm install process" before running the build)
-        new webpack.DefinePlugin({
-            'process.env': JSON.stringify(dotenv.config().parsed) // it will automatically pick up key values from .env file
-        }),
+        new Dotenv(),
         new HtmlWebpackPlugin({
             template: path.resolve('./index.html')
         })
@@ -97,10 +93,6 @@ module.exports = options => ({
                     },
                 ],
             },
-            // {
-            //     test: /\.html$/,
-            //     use: 'html-loader'
-            // },
             {
                 test: /\.(mp4|webm)$/,
                 use: {
