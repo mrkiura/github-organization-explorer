@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import {
     InputGroup,
     InputGroupText,
@@ -7,14 +7,13 @@ import {
     Table,
     Container,
     Row,
-    Col,
+    Col
 } from 'reactstrap';
 import { usePaginate } from '../hooks/usePaginate';
 import { usePageInfo } from '../hooks/usePageInfo';
 import { useRepositories } from '../hooks/useRepositories';
 import { useSortData } from '../hooks/useSortData';
 import { useGithubOrg } from '../hooks/useGithubOrg';
-import { Sorter } from './Sorter';
 import { RepositoryRow } from './RepositoryRow';
 import { Paginator } from './Paginator';
 import { getClassNamesFor } from '../utils';
@@ -30,7 +29,7 @@ const ListRepositories = ({ toggleScreen }) => {
     pageCount = Math.ceil(repositories.length / pageLimit);
     const { page } = usePaginate(repositories, pageLimit, selectedPage);
 
-    const { sortedData, sortConfig, setSortConfig } = useSortData(page);
+    const { sortedData, sortConfig } = useSortData(page);
 
     return (
         <Container>
@@ -52,9 +51,6 @@ const ListRepositories = ({ toggleScreen }) => {
                             <br />
                         </div>
                     </Col>
-                    {/* <Col sm={{ size: 1, offset: 1 }}>
-                        <Sorter handleSort={setSortConfig} sortConfig={sortConfig} />
-                    </Col> */}
                 </Row>
                 <Row className="justify-content-between">
                     <Table hover>

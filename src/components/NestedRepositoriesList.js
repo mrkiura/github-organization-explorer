@@ -1,9 +1,5 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import {
-    InputGroup,
-    InputGroupText,
-    InputGroupAddon,
-    Input,
     Table,
     Container,
     Row,
