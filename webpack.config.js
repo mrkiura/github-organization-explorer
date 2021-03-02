@@ -11,6 +11,9 @@ module.exports = options => ({
         publicPath: '/',
         filename: 'main.js'
     },
+    devServer: {
+        contentBase: './public'
+    },
     plugins: [
         // fix "process is not defined" error:
         // (do "npm install process" before running the build)
