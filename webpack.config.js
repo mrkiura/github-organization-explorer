@@ -1,6 +1,7 @@
 const dotenv = require('dotenv');
 const path = require('path');
 const webpack = require('webpack');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = options => ({
     mode: options.mode,
@@ -19,6 +20,9 @@ module.exports = options => ({
         // (do "npm install process" before running the build)
         new webpack.DefinePlugin({
             'process.env': JSON.stringify(dotenv.config().parsed) // it will automatically pick up key values from .env file
+        }),
+        new HtmlWebpackPlugin({
+            template: path.resolve('./index.html')
         })
     ],
     optimization: options.optimization,
@@ -93,10 +97,10 @@ module.exports = options => ({
                     },
                 ],
             },
-            {
-                test: /\.html$/,
-                use: 'html-loader'
-            },
+            // {
+            //     test: /\.html$/,
+            //     use: 'html-loader'
+            // },
             {
                 test: /\.(mp4|webm)$/,
                 use: {
