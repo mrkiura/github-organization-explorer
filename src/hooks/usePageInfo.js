@@ -1,7 +1,6 @@
 import { useCallback } from 'react';
 import { useTrackedState, useSetDraft } from '../store';
 
-
 export const usePageInfo = () => {
     const state = useTrackedState();
     const getPageInfo = () => state.pageInfo;
@@ -12,9 +11,9 @@ export const usePageInfo = () => {
             setDraft((draft) => {
                 draft.pageInfo.selectedPage = selectedPage;
                 draft.pageInfo.pageCount = pageCount;
-            })
+            });
         },
-        [setDraft],
+        [setDraft]
     );
     return { getPageInfo, setPageInfo };
 };

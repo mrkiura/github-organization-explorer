@@ -1,20 +1,19 @@
 import { useCallback } from 'react';
 import { useTrackedState, useSetDraft } from '../store';
 
-
 export const useGithubOrg = () => {
     const state = useTrackedState();
     const getGithubOrg = () => state.organization;
     const setDraft = useSetDraft();
 
     const setGithubOrg = useCallback(
-        organization => {
+        (organization) => {
             setDraft((draft) => {
                 draft.organization = organization;
                 draft.contributors = [];
-            })
+            });
         },
-        [setDraft],
+        [setDraft]
     );
     return { getGithubOrg, setGithubOrg };
-}
+};

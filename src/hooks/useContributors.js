@@ -1,7 +1,6 @@
 import { useCallback } from 'react';
 import { useTrackedState, useSetDraft } from '../store';
 
-
 export const useContributors = () => {
     const state = useTrackedState();
     const getContributors = () => state.contributors;
@@ -14,9 +13,9 @@ export const useContributors = () => {
             }
             setDraft((draft) => {
                 draft.contributors = [...draft.contributors, ...contributors];
-            })
+            });
         },
-        [setDraft],
+        [setDraft]
     );
     return { getContributors, addContributors };
 };

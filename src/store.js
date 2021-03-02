@@ -2,7 +2,6 @@ import { useState, useCallback } from 'react';
 import { createContainer } from 'react-tracked';
 import produce from 'immer';
 
-
 const initialState = {
     repositories: [],
     contributors: [],
@@ -11,31 +10,31 @@ const initialState = {
     dropdownToggle: false,
     sortConfig: {
         key: '',
-        direction: ''
+        direction: '',
     },
     pageInfo: {
         selectedPage: 1,
         pageLimit: 12,
-        pageCount: null
+        pageCount: null,
     },
     organization: 'angular',
-    loading: null
+    loading: null,
 };
 
 const useValue = () => useState(initialState);
 
 const { Provider, useTrackedState, useUpdate: useSetState } = createContainer(
-  useValue,
+    useValue
 );
 
 const useSetDraft = () => {
-  const setState = useSetState();
-  return useCallback(
-    draftUpdater => {
-      setState(produce(draftUpdater));
-    },
-    [setState],
-  );
+    const setState = useSetState();
+    return useCallback(
+        (draftUpdater) => {
+            setState(produce(draftUpdater));
+        },
+        [setState]
+    );
 };
 
 export { Provider, useTrackedState, useSetDraft };

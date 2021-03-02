@@ -1,10 +1,10 @@
 import { useCallback } from 'react';
 import { useTrackedState, useSetDraft } from '../store';
 
-
 export const useRepoContributors = () => {
     const state = useTrackedState();
-    const getRepoContributors = (repoName) => state.repoContributors.repoName.repoContributors;
+    const getRepoContributors = (repoName) =>
+        state.repoContributors.repoName.repoContributors;
     const setDraft = useSetDraft();
 
     const addContributorsToRepo = useCallback(
@@ -15,14 +15,17 @@ export const useRepoContributors = () => {
             }
             setDraft((draft) => {
                 if (draft.repoContributors[repoName]) {
-                    draft.repoContributors[repoName].contributors = [...draft.repoContributors[repoName].contributors, ...contributors]
+                    draft.repoContributors[repoName].contributors = [
+                        ...draft.repoContributors[repoName].contributors,
+                        ...contributors,
+                    ];
                 } else {
                     draft.repoContributors[repoName] = repo;
                     draft.repoContributors[repoName].contributors = contributors;
                 }
-            })
+            });
         },
-        [setDraft],
+        [setDraft]
     );
     return { getRepoContributors, addContributorsToRepo };
 };

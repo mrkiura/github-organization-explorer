@@ -1,5 +1,5 @@
 export function rateLimitMap(array, requestsPerSec, maxInFlight, fn) {
-    return new Promise(function(resolve, reject) {
+    return new Promise(function (resolve, reject) {
         var index = 0;
         var inFlightCntr = 0;
         var doneCntr = 0;
@@ -21,16 +21,20 @@ export function rateLimitMap(array, requestsPerSec, maxInFlight, fn) {
             return cnt;
         }
 
-        function runMore() {
-            while (index < array.length && inFlightCntr < maxInFlight && calcRequestsInLastSecond() < requestsPerSec) {
-                (function(i) {
+        function runMore () {
+            while (
+                index < array.length &&
+              inFlightCntr < maxInFlight &&
+              calcRequestsInLastSecond() < requestsPerSec
+            ) {
+                (function (i) {
                     ++inFlightCntr;
                     launchTimes.push(Date.now());
-                    fn(array[i]).then(function(val) {
-                        results[i] = val;
-                        --inFlightCntr;
-                        ++doneCntr;
-                        runMore();
+                    fn(array[i]).then(function (val) {
+                      results[i] = val;
+                      --inFlightCntr;
+                      ++doneCntr;
+                      runMore();
                     }, reject);
                 })(index);
                 ++index;
@@ -40,11 +44,12 @@ export function rateLimitMap(array, requestsPerSec, maxInFlight, fn) {
                 resolve(results);
             } else if (launchTimes.length >= requestsPerSec) {
                 // calc how long we have to wait before sending more
-                var delta = 1000 - (Date.now() - launchTimes[launchTimes.length - requestsPerSec]);
+                var delta =
+                1000 -
+                (Date.now() - launchTimes[launchTimes.length - requestsPerSec]);
                 if (delta >= 0) {
                     setTimeout(runMore, ++delta);
                 }
-
             }
         }
         runMore();

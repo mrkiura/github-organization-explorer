@@ -1,34 +1,35 @@
 import { useCallback } from 'react';
 import { useTrackedState, useSetDraft } from '../store';
 
-
 export const useRepositories = () => {
     const state = useTrackedState();
     const getRepositories = () => state.repositories;
     const setDraft = useSetDraft();
 
-    const addRepositories= useCallback(
+    const addRepositories = useCallback(
         (repositories) => {
             if (!repositories) {
                 return;
             }
             setDraft((draft) => {
-                draft.repositories = [...new Set([...draft.repositories, ...repositories])];
-            })
+                draft.repositories = [
+                    ...new Set([...draft.repositories, ...repositories]),
+                ];
+            });
         },
-        [setDraft],
+        [setDraft]
     );
 
-    const setRepositories= useCallback(
+    const setRepositories = useCallback(
         (repositories) => {
             if (!repositories) {
                 return;
             }
             setDraft((draft) => {
                 draft.repositories = repositories;
-            })
+            });
         },
-        [setDraft],
+        [setDraft]
     );
     return { getRepositories, addRepositories, setRepositories };
 };

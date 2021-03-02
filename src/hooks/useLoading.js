@@ -1,18 +1,17 @@
 import { useCallback } from 'react';
 import { useTrackedState, useSetDraft } from '../store';
 
-
 export const useLoading = () => {
     const state = useTrackedState();
     const getLoading = () => state.loading;
     const setDraft = useSetDraft();
     const toggleLoading = useCallback(
-        loading => {
-            setDraft(draft => {
+        (loading) => {
+            setDraft((draft) => {
                 draft.loading = loading;
             });
         },
-        [setDraft],
+        [setDraft]
     );
     return { getLoading, toggleLoading };
 };
