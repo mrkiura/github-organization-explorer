@@ -1,16 +1,22 @@
 import React from 'react';
 import { ProfileInfo } from './ProfileInfo';
 import { Badge } from 'reactstrap';
+import { Link } from "react-router-dom";
 
-export const ContributorRow = ({ contributor }) => {
+export const ContributorRow = ({ contributor, toggleScreen }) => {
     return (
         <tr>
             <td>
-                <ProfileInfo
-                    username={contributor.username}
-                    avatarUrl={contributor.avatarUrl}
-                    profileUrl={contributor.htmlUrl}
-                />
+                <nav>
+                    <Link to="/contributor" onClick={() => { toggleScreen(); }}
+                    >
+                        <ProfileInfo
+                            username={contributor.username}
+                            avatarUrl={contributor.avatarUrl}
+                            profileUrl={contributor.htmlUrl}
+
+                        /></Link>
+                </nav>
             </td>
             <td>
                 <Badge pill>{contributor.contributions}</Badge>

@@ -16,7 +16,7 @@ import { useRepositories } from '../hooks/useRepositories';
 import { useSortData } from '../hooks/useSortData';
 import { useGithubOrg } from '../hooks/useGithubOrg';
 import {
-    getRepoContributorStream, fetchContributorDetails, fetchRepositories
+    getRepoContributorStream, fetchContributorDetails, getRepoStream
 } from '../hooks/useGithubData';
 import { Sorter } from './Sorter';
 import { ContributorRow } from './ContributorRow';
@@ -24,35 +24,38 @@ import { Paginator } from './Paginator';
 import { getClassNamesFor } from '../utils';
 import { useRepoContributors } from '../hooks/useRepoContributors';
 
-const ListContributors = () => {
+const ListContributors = ({ toggleScreen }) => {
     const { getGithubOrg, setGithubOrg } = useGithubOrg();
     const { addContributors, getContributors } = useContributors();
     const { addRepositories } = useRepositories();
     const { addContributorsToRepo } = useRepoContributors();
     const githubOrg = getGithubOrg();
     useEffect(() => {
-        (async () => {
-            const repos = await fetchRepositories(githubOrg);
-            if (repos) {
-                for await (let repo of repos) {
-                    const repoFullName = repo.full_name;
-                    const streamPromise = getRepoContributorStream(repoFullName);
-                    streamPromise.then((stream) => {
-                        const reader = stream.getReader();
+        const repoStreamPromise = getRepoStream(githubOrg);
+        repoStreamPromise
+            .then((repoStream) => repoStream.getReader().read())
+            .then(({ done, value }) => {
+                return new Promise((resolve, reject) => resolve([value]));
+            })
+            .then(groupedRrepos => {
+                const flattened = groupedRrepos.flat().flat();
+                addRepositories(flattened);
+                return flattened;
+            }).then(repos => {
+                for (let repo of repos) {
+                    const contributorStreamPromise = getRepoContributorStream(repo.full_name);
+                    contributorStreamPromise.then((contrbutorStream) => {
+                        const reader = contrbutorStream.getReader();
                         reader.read().then(async ({ done, value }) => {
                             if (done) {
                                 return;
                             }
-                            const cleanedContributors = await fetchContributorDetails(value);
-                            Promise.all(cleanedContributors).then((contributors) => {
-                                addContributors(contributors);
-                                addContributorsToRepo(contributors, repo);
-                            });
+                            return await fetchContributorDetails(value);
+                        }).then(contributors => {
                         });
                     });
                 }
-            }
-        })();
+            });
     }, [addContributors, githubOrg, addRepositories, addContributorsToRepo]);
 
     const { getPageInfo, setPageInfo } = usePageInfo();
@@ -106,7 +109,7 @@ const ListContributors = () => {
                         </thead>
                         <tbody>
                             {sortedData.map((contributor, index) => (
-                                <ContributorRow contributor={contributor} key={index} />
+                                <ContributorRow contributor={contributor} key={index} toggleScreen={toggleScreen} />
                             ))}
                         </tbody>
                     </Table>
