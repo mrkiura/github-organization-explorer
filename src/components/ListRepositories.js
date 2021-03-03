@@ -19,10 +19,9 @@ import { Paginator } from './Paginator';
 import { getClassNamesFor } from '../utils';
 
 
-const ListRepositories = ({ toggleScreen }) => {
+const ListRepositories = () => {
     const { getGithubOrg, setGithubOrg } = useGithubOrg();
     const { getRepositories } = useRepositories();
-
     const { getPageInfo, setPageInfo } = usePageInfo();
     const repositories = getRepositories();
     let { selectedPage, pageLimit, pageCount } = getPageInfo();
@@ -70,7 +69,7 @@ const ListRepositories = ({ toggleScreen }) => {
                         </thead>
                         <tbody>
                             {sortedData.map((repo, index) => (
-                                <RepositoryRow repo={repo} key={index} toggleScreen={toggleScreen}/>
+                                <RepositoryRow repo={repo} key={index}/>
                             ))}
                         </tbody>
                     </Table>

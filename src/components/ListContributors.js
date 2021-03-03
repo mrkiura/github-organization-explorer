@@ -23,8 +23,8 @@ import { ContributorRow } from './ContributorRow';
 import { Paginator } from './Paginator';
 import { getClassNamesFor } from '../utils';
 import { useRepoContributors } from '../hooks/useRepoContributors';
-import { ContributorDetail } from './ContributorDetail';
-
+import { Spinner } from 'reactstrap';
+import { useLoading } from '../hooks/useLoading';
 
 const ListContributors = () => {
     const { getGithubOrg, setGithubOrg } = useGithubOrg();
@@ -32,15 +32,13 @@ const ListContributors = () => {
     const { addRepositories, setRepositories } = useRepositories();
     const { addContributorsToRepo } = useRepoContributors();
     const githubOrg = getGithubOrg();
+    const { getLoading, toggleLoading } = useLoading();
     const contributors = getContributors();
     useEffect(async () => {
         const abortController = new AbortController();
         const signal = abortController.signal;
         console.log("state conts", contributors);
-        // if (Array.from(contributors.length > 100)) {
-        //     // co
-        //     return;
-        // }
+
         let repos = await fetchRepos(githubOrg, signal);
         repos = repos.reverse();
         setRepositories(repos);
@@ -49,50 +47,20 @@ const ListContributors = () => {
             const contributorDetails = await fetchContributorDetails(repoContributors);
             addContributorsToRepo(contributorDetails, repo);
             addContributors(contributorDetails);
+            toggleLoading(false);
             console.log("updated", contributorDetails);
         }
 
-        return function cleanup () {
+        return function cleanup() {
             abortController.abort();
         };
-
-        // repos.then(resuls => {
-        // });
-        // const repoStreamPromise = getRepoStream(githubOrg);
-        // repoStreamPromise
-        //     .then((repoStream) => repoStream.getReader().read())
-        //     .then(({ done, value }) => {
-        //         return new Promise((resolve, reject) => resolve([value]));
-        //     })
-        //     .then(groupedRrepos => {
-        //         const flattened = groupedRrepos.flat().flat();
-        //         addRepositories(flattened);
-        //         return flattened;
-        //     }).then(repos => {
-        //         for (let repo of repos) {
-        //             console.log("repo man", repo);
-        //             const contributorStreamPromise = getRepoContributorStream(repo.full_name);
-        //             contributorStreamPromise.then((contrbutorStream) => {
-        //                 const reader = contrbutorStream.getReader();
-        //                 reader.read().then(async ({ done, value }) => {
-        //                     if (done) {
-        //                         return;
-        //                     }
-        //                     return await fetchContributorDetails(value);
-        //                 }).then(contributors => {
-        //                 });
-        //             });
-        //         }
-        //     });
     }, [addContributors, githubOrg, addRepositories, addContributorsToRepo]);
-
     const { getPageInfo, setPageInfo } = usePageInfo();
     let { selectedPage, pageLimit, pageCount } = getPageInfo();
     pageCount = Math.ceil(contributors.length / pageLimit);
     const { page } = usePaginate(contributors, pageLimit, selectedPage);
 
     const { sortedData, sortConfig, setSortConfig } = useSortData(page);
-
     return (
         <Container>
             <div className="center">
@@ -118,6 +86,7 @@ const ListContributors = () => {
                     </Col>
                 </Row>
                 <Row className="justify-content-between">
+
                     <Table hover>
                         <thead className="profile-info">
                             <tr>
@@ -135,9 +104,12 @@ const ListContributors = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {sortedData.map((contributor, index) => (
-                                <ContributorRow contributor={contributor} key={index} />
-                            ))}
+                        {getLoading() ? <Spinner style={{ width: '3rem', height: '3rem' }} />:
+                                                        sortedData.map((contributor, index) => (
+                                                            <ContributorRow contributor={contributor} key={index} />
+                                                        ))
+                        }
+
                         </tbody>
                     </Table>
                 </Row>

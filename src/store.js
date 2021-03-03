@@ -26,7 +26,7 @@ const initialState = {
     },
     organization: 'angular',
     activeTab: '1',
-    loading: null
+    loading: true
 };
 
 const useValue = () => useState(initialState);

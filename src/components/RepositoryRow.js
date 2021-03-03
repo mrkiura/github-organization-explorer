@@ -19,7 +19,6 @@ export const RepositoryRow = ({ repo, toggleScreen }) => {
                     <li onClick={() => {handleClick(repo.name);}}>
                         <Link to="/repo">{repo.name}</Link>
                     </li>
-
                 </nav>
             </td>
             <td className="left">{repo.description}</td>
