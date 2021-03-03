@@ -83,7 +83,7 @@ export const fetchContributorDetails = async (contributors) => {
         });
     };
     return new Promise((resolve, reject) => {
-        fetchWithLimit(contributors, 5, 5, fetchContributor).then((results) => {
+        fetchWithLimit(contributors, 1, 20, fetchContributor).then((results) => {
             if (results) {
                 resolve(results);
             }
@@ -104,7 +104,7 @@ export const getRepoContributorStream = async (repoFullName) => {
                 const header = repsonse.headers.get('Link');
                 const urlPromises = getPageUrls(header, contributorsUrl);
                 urlPromises.then(urls => {
-                    fetchWithLimit(urls, 5, 5, fetchPage).then((results) => {
+                    fetchWithLimit(urls, 1, 20, fetchPage).then((results) => {
                         if (results) {
                             const res = [...body, ...results];
                             controller.enqueue(res);
@@ -128,7 +128,7 @@ export const fetchRepos = async (organization, signal) => {
         const body = await repsonse.json();
         const header = repsonse.headers.get('Link');
         const urls = getPageUrls(header, repoUrl);
-        fetchWithLimit(urls, 5, 5, fetchPage).then((results) => {
+        fetchWithLimit(urls, 1, 20, fetchPage).then((results) => {
             if (results) {
                 results = [...body, ...results.flat()];
                 resolve(results);
@@ -147,7 +147,7 @@ export const requestRepoContributors = async (repoFullName, signal) => {
         if (!urls && body) { // no pages exist
             resolve(body);
         } else { // we have pages + initial response
-            fetchWithLimit(urls, 5, 5, fetchPage).then((results) => {
+            fetchWithLimit(urls, 1, 20, fetchPage).then((results) => {
                 if (results) {
                     results = [...body, ...results.flat()];
                     resolve(results);
