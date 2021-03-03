@@ -9,19 +9,21 @@ export const useRepoContributors = () => {
 
     const addContributorsToRepo = useCallback(
         (contributors, repo) => {
+            const iterable = Array.from(contributors);
+            console.log("contributos in set", iterable);
             const repoName = repo.name;
-            if (!contributors) {
+            if (iterable.length < 1) {
                 return;
             }
             setDraft((draft) => {
                 if (draft.repoContributors[repoName]) {
-                    draft.repoContributors[repoName].contributors = [
-                        ...draft.repoContributors[repoName].contributors,
-                        ...contributors,
-                    ];
+                    draft.repoContributors[repoName].contributors =
+                    draft.repoContributors[repoName].contributors.concat(iterable);
                 } else {
-                    draft.repoContributors[repoName] = repo;
-                    draft.repoContributors[repoName].contributors = contributors;
+                    draft.repoContributors[repoName] = {
+                        repoDetail: repo,
+                        contributors: iterable
+                    };
                 }
             });
         },

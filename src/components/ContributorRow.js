@@ -1,14 +1,24 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { ProfileInfo } from './ProfileInfo';
 import { Badge } from 'reactstrap';
 import { Link } from "react-router-dom";
+import { useTabInfo } from '../hooks/useTabs';
 
-export const ContributorRow = ({ contributor, toggleScreen }) => {
+export const ContributorRow = ({ contributor }) => {
+    const [activeTab, setActiveTab] = useState('1');
+
+    const handleClick = (value) => {
+        console.log("clicked", value);
+        setActiveTab(5);
+    };
     return (
         <tr>
             <td>
                 <nav>
-                    <Link to="/contributor" onClick={() => { toggleScreen(); }}
+                    <Link
+                        to="/contributor"
+                        name={contributor.username}
+                        onClick={() => {handleClick(contributor);}}
                     >
                         <ProfileInfo
                             username={contributor.username}

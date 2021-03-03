@@ -16,21 +16,48 @@ import { useRepositories } from '../hooks/useRepositories';
 import { useSortData } from '../hooks/useSortData';
 import { useGithubOrg } from '../hooks/useGithubOrg';
 import {
-    getRepoContributorStream, fetchContributorDetails, getRepoStream
+    fetchContributorDetails, requestRepoContributors, fetchRepos
 } from '../hooks/useGithubData';
 import { Sorter } from './Sorter';
 import { ContributorRow } from './ContributorRow';
 import { Paginator } from './Paginator';
 import { getClassNamesFor } from '../utils';
 import { useRepoContributors } from '../hooks/useRepoContributors';
+import { ContributorDetail } from './ContributorDetail';
 
-const ListContributors = ({ toggleScreen }) => {
+
+const ListContributors = () => {
     const { getGithubOrg, setGithubOrg } = useGithubOrg();
     const { addContributors, getContributors } = useContributors();
-    const { addRepositories } = useRepositories();
+    const { addRepositories, setRepositories } = useRepositories();
     const { addContributorsToRepo } = useRepoContributors();
     const githubOrg = getGithubOrg();
-    useEffect(() => {
+    const contributors = getContributors();
+    useEffect(async () => {
+        const abortController = new AbortController();
+        const signal = abortController.signal;
+        console.log("state conts", contributors);
+        // if (Array.from(contributors.length > 100)) {
+        //     // co
+        //     return;
+        // }
+        let repos = await fetchRepos(githubOrg, signal);
+        repos = repos.reverse();
+        setRepositories(repos);
+        for (let repo of repos) {
+            const repoContributors = await requestRepoContributors(repo.full_name);
+            const contributorDetails = await fetchContributorDetails(repoContributors);
+            addContributorsToRepo(contributorDetails, repo);
+            addContributors(contributorDetails);
+            console.log("updated", contributorDetails);
+        }
+
+        return function cleanup () {
+            abortController.abort();
+        };
+
+        // repos.then(resuls => {
+        // });
         // const repoStreamPromise = getRepoStream(githubOrg);
         // repoStreamPromise
         //     .then((repoStream) => repoStream.getReader().read())
@@ -43,6 +70,7 @@ const ListContributors = ({ toggleScreen }) => {
         //         return flattened;
         //     }).then(repos => {
         //         for (let repo of repos) {
+        //             console.log("repo man", repo);
         //             const contributorStreamPromise = getRepoContributorStream(repo.full_name);
         //             contributorStreamPromise.then((contrbutorStream) => {
         //                 const reader = contrbutorStream.getReader();
@@ -59,7 +87,6 @@ const ListContributors = ({ toggleScreen }) => {
     }, [addContributors, githubOrg, addRepositories, addContributorsToRepo]);
 
     const { getPageInfo, setPageInfo } = usePageInfo();
-    const contributors = getContributors();
     let { selectedPage, pageLimit, pageCount } = getPageInfo();
     pageCount = Math.ceil(contributors.length / pageLimit);
     const { page } = usePaginate(contributors, pageLimit, selectedPage);
@@ -109,7 +136,7 @@ const ListContributors = ({ toggleScreen }) => {
                         </thead>
                         <tbody>
                             {sortedData.map((contributor, index) => (
-                                <ContributorRow contributor={contributor} key={index} toggleScreen={toggleScreen} />
+                                <ContributorRow contributor={contributor} key={index} />
                             ))}
                         </tbody>
                     </Table>

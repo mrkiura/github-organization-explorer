@@ -27,7 +27,7 @@ const getParameterByName = (name, url) => {
     return decodeURIComponent(results[2].replace(/\+/g, ' '));
 };
 
-const getPageUrls = async (linkHeader, url) => {
+const getPageUrls = (linkHeader, url) => {
     const urls = [];
     const link = parseLink(linkHeader);
 
@@ -54,10 +54,11 @@ const fetchPage = async (url) => {
 };
 
 export const fetchContributorDetails = async (contributors) => {
-    const userUrls = contributors.filter(contributor => contributor.url);
+    const userUrls = contributors.map(contributor => contributor.url);
 
-    const fetchContributor = async (contributorUrl) => {
+    const fetchContributor = async (contributor) => {
         return new Promise(async (resolve, reject) => {
+            const contributorUrl = contributor.url;
             const response = await fetch(contributorUrl, {
                 headers: githubAuthHeaders
             });
@@ -68,30 +69,33 @@ export const fetchContributorDetails = async (contributors) => {
             const gists = user.public_gists;
             const avatarUrl = user.avatar_url;
             const htmlUrl = user.avatar_url;
-            const contributor = {
+            const contributions = contributor.contributions;
+            const repoContributor = {
                 username,
                 gists,
                 htmlUrl,
                 avatarUrl,
                 followers,
-                publicRepos
+                publicRepos,
+                contributions
             };
-            return contributor;
+            resolve(repoContributor);
         });
     };
-
-    fetchWithLimit(userUrls, 5, 5, fetchContributor).then((results) => {
-        if (results) {
-            return results;
-        }
+    return new Promise((resolve, reject) => {
+        fetchWithLimit(contributors, 5, 5, fetchContributor).then((results) => {
+            if (results) {
+                resolve(results);
+            }
+        });
     });
 };
 
 export const getRepoContributorStream = async (repoFullName) => {
     let interval;
     const stream = new ReadableStream({
-        async start (controller) {},
-        async pull (controller) {
+        async start(controller) { },
+        async pull(controller) {
             interval = setInterval(async () => {
                 let contributorsUrl = `https://api.github.com/repos/${repoFullName}/contributors`;
 
@@ -100,7 +104,7 @@ export const getRepoContributorStream = async (repoFullName) => {
                 const header = repsonse.headers.get('Link');
                 const urlPromises = getPageUrls(header, contributorsUrl);
                 urlPromises.then(urls => {
-                    fetchWithLimit(urls, 7, 15, fetchPage).then((results) => {
+                    fetchWithLimit(urls, 5, 5, fetchPage).then((results) => {
                         if (results) {
                             const res = [...body, ...results];
                             controller.enqueue(res);
@@ -109,7 +113,7 @@ export const getRepoContributorStream = async (repoFullName) => {
                 });
             }, 1000);
         },
-        cancel () {
+        cancel() {
             clearInterval(interval);
             return;
         }
@@ -117,50 +121,38 @@ export const getRepoContributorStream = async (repoFullName) => {
     return stream;
 };
 
-export const getRepoStream = async (organization) => {
-    let interval;
-    const stream = new ReadableStream({
-        async start (controller) {},
-        async pull (controller) {
-            interval = setInterval(async () => {
-                let repoUrl = `https://api.github.com/orgs/${organization}/repos`;
-                const repsonse = await fetch(repoUrl, { headers: githubAuthHeaders });
-                const body = await repsonse.json();
-                const header = repsonse.headers.get('Link');
-                const urlPromises = getPageUrls(header, repoUrl);
-                urlPromises.then(urls => {
-                    fetchWithLimit(urls, 7, 15, fetchPage).then((results) => {
-                        if (results) {
-                            results.push(body);
-                            controller.enqueue(results);
-                        }
-                    });
-                });
-            }, 1000);
-        },
-        cancel () {
-            clearInterval(interval);
-            return;
-        }
-    });
-    return stream;
-};
-
-export const requestRepoContributors = async (repo) => {
-    return new Promise (async (resolve, reject) => {
-        let contributorsUrl = `https://api.github.com/repos/${repoFullName}/contributors`;
-        const repsonse = await fetch(contributorsUrl, { headers: githubAuthHeaders });
+export const fetchRepos = async (organization, signal) => {
+    return new Promise(async (resolve, reject) => {
+        let repoUrl = `https://api.github.com/orgs/${organization}/repos`;
+        const repsonse = await fetch(repoUrl, { headers: githubAuthHeaders, signal: signal });
         const body = await repsonse.json();
-        let contributors = [body];
         const header = repsonse.headers.get('Link');
-        const urlPromises = getPageUrls(header, contributorsUrl);
-        urlPromises.then(urls => {
-            fetchWithLimit(urls, 75, 15, fetchPage).then((results) => {
+        const urls = getPageUrls(header, repoUrl);
+        fetchWithLimit(urls, 5, 5, fetchPage).then((results) => {
+            if (results) {
+                results = [...body, ...results.flat()];
+                resolve(results);
+            }
+        });
+    });
+};
+
+export const requestRepoContributors = async (repoFullName, signal) => {
+    return new Promise(async (resolve, reject) => {
+        let contributorsUrl = `https://api.github.com/repos/${repoFullName}/contributors`;
+        const repsonse = await fetch(contributorsUrl, { headers: githubAuthHeaders, signal: signal });
+        const body = await repsonse.json();
+        const header = repsonse.headers.get('Link');
+        const urls = getPageUrls(header, contributorsUrl);
+        if (!urls && body) { // no pages exist
+            resolve(body);
+        } else { // we have pages + initial response
+            fetchWithLimit(urls, 5, 5, fetchPage).then((results) => {
                 if (results) {
-                    contributors.concat(results);
+                    results = [...body, ...results.flat()];
+                    resolve(results);
                 }
             });
-        });
-        resolve(contributors);
+        }
     });
 };

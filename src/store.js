@@ -13,7 +13,7 @@ const initialState = {
         contributorDetail: {},
         repositories: []
     },
-    contributorRepos: {},
+    repoContributors: {},
     dropdownToggle: false,
     sortConfig: {
         key: '',
@@ -25,6 +25,7 @@ const initialState = {
         pageCount: null
     },
     organization: 'angular',
+    activeTab: '1',
     loading: null
 };
 
