@@ -30,7 +30,7 @@ import { useLoading } from '../hooks/useLoading';
 const ListContributors = () => {
     const { getGithubOrg, setGithubOrg } = useGithubOrg();
     const { addContributors, getContributors } = useContributors();
-    const { addRepositories, setRepositories } = useRepositories();
+    const { addRepositories } = useRepositories();
     const { addContributorsToRepo } = useRepoContributors();
     const githubOrg = getGithubOrg();
     const { getLoading, toggleLoading } = useLoading();
@@ -41,15 +41,17 @@ const ListContributors = () => {
 
         let repos = await fetchRepos(githubOrg, signal);
         repos = repos.reverse();
-        setRepositories(repos); // adds contributors
         for (let repo of repos) {
             const repoContributors = await requestRepoContributors(repo.full_name);
-            addContributorsToRepo(repoContributors, repo);
             const contributorDetails = await fetchContributorDetails(repoContributors);
+            repo = {
+                ...repo,
+                contributors: contributorDetails
+            };
+            addRepositories([repo]);
             addContributors(contributorDetails);
             toggleLoading(false);
         }
-        // setRepositories(repos); // adds contributors
 
         return function cleanup() {
             abortController.abort();
@@ -104,11 +106,11 @@ const ListContributors = () => {
                             </tr>
                         </thead>
                         <tbody>
-                        {getLoading() ? <Spinner style={{ width: '3rem', height: '3rem' }} />:
-                                                        sortedData.map((contributor, index) => (
-                                                            <ContributorRow contributor={contributor} key={index} />
-                                                        ))
-                        }
+                            {getLoading() ? <Spinner style={{ width: '3rem', height: '3rem' }} /> :
+                                sortedData.map((contributor, index) => (
+                                    <ContributorRow contributor={contributor} key={index} />
+                                ))
+                            }
 
                         </tbody>
                     </Table>

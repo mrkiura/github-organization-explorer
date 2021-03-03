@@ -12,7 +12,7 @@ export const ContributorRow = ({ contributor }) => {
     const [activeTab, setActiveTab] = useState('1');
 
     const handleClick = (value) => {
-        // setActiveTab(5);
+        setActiveTab(5);
         setSelectedContributor(contributor);
     };
     return (

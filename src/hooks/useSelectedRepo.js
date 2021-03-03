@@ -3,7 +3,7 @@ import { useTrackedState, useSetDraft } from '../store';
 
 export const useSelectedRepo = () => {
     const state = useTrackedState();
-    const getSelectedRepo = () => {return state.activeRepo;};
+    const getSelectedRepo = () => {return { ...state.activeRepo };};
     const setDraft = useSetDraft();
 
     const setSelectedRepo = useCallback(

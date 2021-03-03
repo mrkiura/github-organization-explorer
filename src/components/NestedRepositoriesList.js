@@ -3,7 +3,7 @@ import {
     Table,
     Container,
     Row,
-    Col,
+    Col
 } from 'reactstrap';
 import { usePaginate } from '../hooks/usePaginate';
 import { usePageInfo } from '../hooks/usePageInfo';
@@ -20,7 +20,6 @@ export const NestedRepositoriesList = ({ repositories }) => {
     const { page } = usePaginate(repositories, pageLimit, selectedPage);
 
     const { sortedData, sortConfig } = useSortData(page);
-    console.log('sorted data', sortedData);
     return (
         <Container>
             <div className="center">

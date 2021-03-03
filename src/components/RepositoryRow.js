@@ -1,18 +1,17 @@
 import React, { useState } from 'react';
 import { Badge } from 'reactstrap';
 import { Link } from 'react-router-dom';
-import { useTabInfo } from '../hooks/useTabs';
 import { useSelectedRepo } from '../hooks/useSelectedRepo';
 
 
-export const RepositoryRow = ({ repo, toggleScreen }) => {
-    const { setActivetab } = useTabInfo();
-    const [activeTab, setActiveTab] = useState('1');
+export const RepositoryRow = ({ repo }) => {
+    // const { setActivetab } = useTabInfo();
+    const [setActiveTab] = useState('1');
     const { setSelectedRepo } = useSelectedRepo();
 
     const handleClick = (value) => {
         setSelectedRepo(repo);
-        setActivetab(5);
+        setActiveTab(5);
     };
     return (
         <tr>

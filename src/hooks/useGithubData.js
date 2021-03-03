@@ -68,7 +68,7 @@ export const fetchContributorDetails = async (contributors) => {
             const publicRepos = user.public_repos;
             const gists = user.public_gists;
             const avatarUrl = user.avatar_url;
-            const htmlUrl = user.avatar_url;
+            const htmlUrl = user.html_url;
             const contributions = contributor.contributions;
             const repoContributor = {
                 username,

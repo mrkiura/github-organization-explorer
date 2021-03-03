@@ -6,50 +6,44 @@ import {
 import { useSelectedContributor } from '../hooks/useSelectedContributor';
 import { NestedRepositoriesList } from './NestedRepositoriesList';
 import { useRepoContributors } from '../hooks/useRepoContributors';
+import { useRepositories } from '../hooks/useRepositories';
 import { Spinner } from 'reactstrap';
 
 
 export const ContributorDetail = () => {
     const { getSelectedContributor } = useSelectedContributor();
-    const { getAllRepoContributors } = useRepoContributors();
     const activeContributor = getSelectedContributor();
-    // const repos = Array.from(actveContributor.repositories);
-
-    const contributorDetail = activeContributor;
-    console.log("contributor", contributorDetail);
-    const repoContributorMap = getAllRepoContributors();
-    console.log("conts map", repoContributorMap);
-    let contributionsByRepo = Object.fromEntries(
-        Object.entries(repoContributorMap).map(([repoName, repoObj]) => [repoName, repoObj.contributors])
-    );
-    const repos = Object.entries(contributionsByRepo).map(([repoName, contributions]) => {
-        if (contributions.includes(activeContributor.login)) {
-            return repoContributorMap[repoName].repoDetail;
-        }
+    const { getRepositories } = useRepositories();
+    const repositories = getRepositories();
+    const finalRepos = repositories.filter((repo) => {
+        repo.contributors.filter(contributor => {
+            if (contributor.username === activeContributor.username) {
+                return repo;
+            }
+        });
     });
-
-    console.log("repos", repos);
 
     return (
         <Container>
             <div className="center">
                 <Jumbotron fluid="md">
                     <Container fluid="md">
-                        (contributorDetail?<h1 className="display-3">Contributor</h1>
-                        <p className="lead">@{contributorDetail.username}</p>
+                        <h1 className="display-3">Contributor</h1>
+                        <p className="lead">@{activeContributor.username}</p>
+                        <p className="lead">Followers: {activeContributor.followers}</p>
+                        <p className="lead">Gists: {activeContributor.gists}</p>
                         <a
                             className="username"
-                            href={contributorDetail.html_url}
+                            href={activeContributor.htmlUrl}
                             target="_blank"
                             rel="noreferrer"
-                        >Visit Github profile</a>: null)
+                        >Visit Github profile</a>
 
                     </Container>
                 </Jumbotron>
             </div>
-            <h1 className="display-3">Repositories contributed to</h1>
-            (repos?
-            <NestedRepositoriesList repositories={repos}/>: <Spinner style={{ width: '3rem', height: '3rem' }} />)
+            <h1 className="display-3">Repositories contributed to:</h1>
+            <NestedRepositoriesList repositories={finalRepos}/>
         </Container>
     );
 };

@@ -10,7 +10,6 @@ export const useSelectedContributor = () => {
 
     const setSelectedContributor = useCallback(
         (contributor) => {
-            console.log("clicked person", contributor);
             setDraft((draft) => {
                 draft.activeContributor = contributor;
             });

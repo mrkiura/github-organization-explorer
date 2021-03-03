@@ -65,9 +65,7 @@ const App = () => {
                                     </TabPane>
                                 </Route>
                                 <Route path="/repo">
-                                    <TabPane tabId="4">
-                                        <RepoDetail />
-                                    </TabPane>
+                                    <RepoDetail />
                                 </Route>
                                 <Route exact path="/">
                                     <TabPane tabId="1">
@@ -75,9 +73,7 @@ const App = () => {
                                     </TabPane>
                                 </Route>
                                 <Route path="/contributor">
-                                    <TabPane tabId="5">
-                                        <ContributorDetail />
-                                    </TabPane>
+                                    <ContributorDetail />
                                 </Route>
                             </Switch>
                         </TabContent>
