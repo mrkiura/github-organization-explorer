@@ -69,7 +69,7 @@ const ListRepositories = () => {
                         </thead>
                         <tbody>
                             {sortedData.map((repo, index) => (
-                                <RepositoryRow repo={repo} key={index}/>
+                                <RepositoryRow repo={repo} key={index} />
                             ))}
                         </tbody>
                     </Table>

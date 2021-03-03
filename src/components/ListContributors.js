@@ -26,6 +26,7 @@ import { useRepoContributors } from '../hooks/useRepoContributors';
 import { Spinner } from 'reactstrap';
 import { useLoading } from '../hooks/useLoading';
 
+
 const ListContributors = () => {
     const { getGithubOrg, setGithubOrg } = useGithubOrg();
     const { addContributors, getContributors } = useContributors();
@@ -37,19 +38,18 @@ const ListContributors = () => {
     useEffect(async () => {
         const abortController = new AbortController();
         const signal = abortController.signal;
-        console.log("state conts", contributors);
 
         let repos = await fetchRepos(githubOrg, signal);
         repos = repos.reverse();
-        setRepositories(repos);
+        setRepositories(repos); // adds contributors
         for (let repo of repos) {
             const repoContributors = await requestRepoContributors(repo.full_name);
+            addContributorsToRepo(repoContributors, repo);
             const contributorDetails = await fetchContributorDetails(repoContributors);
-            addContributorsToRepo(contributorDetails, repo);
             addContributors(contributorDetails);
             toggleLoading(false);
-            console.log("updated", contributorDetails);
         }
+        // setRepositories(repos); // adds contributors
 
         return function cleanup() {
             abortController.abort();

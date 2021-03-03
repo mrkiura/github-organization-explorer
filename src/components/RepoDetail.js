@@ -5,15 +5,23 @@ import {
 } from 'reactstrap';
 import { NestedContributorList } from './NestedContributorList';
 import { useSelectedRepo } from '../hooks/useSelectedRepo';
+import { useRepoContributors } from '../hooks/useRepoContributors';
+import { getRepoContributorStream } from '../hooks/useGithubData';
 
 export const RepoDetail = () => {
     const { getSelectedRepo } = useSelectedRepo();
+    const { getRepoContributors } = useRepoContributors();
     const repoInfo = getSelectedRepo();
-    const repoContributors = Array.from(repoInfo.contributors);
+    let contributors = [];
+    if (repoInfo) {
+        const repoContributors = getRepoContributors(repoInfo.name);
+        contributors = repoContributors;
+    }
     return (
         <div className="center">
             <Jumbotron fluid>
                 <Container fluid="md">
+                    <p>hii ndio hio</p>
                     <h1 className="display-3">{repoInfo.repoDetail.name}</h1>
                     <p className="lead">Owner: {repoInfo.repoDetail.owner.login}</p>
                     <p className="lead">Language: {repoInfo.repoDetail.language}</p>
@@ -26,7 +34,7 @@ export const RepoDetail = () => {
                     >Visit Github profile</a>
                 </Container>
             </Jumbotron>
-            <NestedContributorList contributors={repoContributors}/>
+            {contributors? <NestedContributorList contributors={contributors}/> : <Spinner style={{ width: '3rem', height: '3rem' }} />}
         </div>
     );
 };

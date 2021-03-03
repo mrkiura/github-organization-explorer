@@ -4,13 +4,14 @@ import { useTrackedState, useSetDraft } from '../store';
 export const useRepoContributors = () => {
     const state = useTrackedState();
     const getRepoContributors = (repoName) =>
-        state.repoContributors.repoName.repoContributors;
+        state.repoContributors.repoName;
+    const getAllRepoContributors = () =>
+        state.repoContributors;
     const setDraft = useSetDraft();
 
     const addContributorsToRepo = useCallback(
         (contributors, repo) => {
             const iterable = Array.from(contributors);
-            console.log("contributos in set", iterable);
             const repoName = repo.name;
             if (iterable.length < 1) {
                 return;
@@ -29,5 +30,5 @@ export const useRepoContributors = () => {
         },
         [setDraft]
     );
-    return { getRepoContributors, addContributorsToRepo };
+    return { getRepoContributors, addContributorsToRepo, getAllRepoContributors };
 };

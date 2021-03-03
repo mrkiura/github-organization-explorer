@@ -20,7 +20,7 @@ export const NestedRepositoriesList = ({ repositories }) => {
     const { page } = usePaginate(repositories, pageLimit, selectedPage);
 
     const { sortedData, sortConfig } = useSortData(page);
-
+    console.log('sorted data', sortedData);
     return (
         <Container>
             <div className="center">
@@ -41,9 +41,9 @@ export const NestedRepositoriesList = ({ repositories }) => {
                             </tr>
                         </thead>
                         <tbody>
-                            {sortedData.map((repo, index) => (
+                            {sortedData.length > 1 ? sortedData.map((repo, index) => (
                                 <RepositoryRow repo={repo} key={index}/>
-                            ))}
+                            )) : null}
                         </tbody>
                     </Table>
                 </Row>
