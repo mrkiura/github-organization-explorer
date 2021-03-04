@@ -1,6 +1,4 @@
 import { useMemo } from 'react';
-// import {} from './'
-
 
 export const usePaginate = (data, pageLimit, pageNumber) => {
     const page = useMemo(() => {
