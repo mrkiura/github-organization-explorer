@@ -1,7 +1,7 @@
+import React from 'react';
 import ReactPaginate from 'react-paginate';
 
-
-export const Paginator = ({ pageCount, onPageChange}) => {
+export const Paginator = ({ pageCount, onPageChange }) => {
     return (
         <ReactPaginate
             breakLabel={'...'}
@@ -21,6 +21,6 @@ export const Paginator = ({ pageCount, onPageChange}) => {
             onPageChange={onPageChange}
             subContainerClassName={'pages pagination'}
             activeClassName={'active'}
-      />
-    )
-}
+        />
+    );
+};

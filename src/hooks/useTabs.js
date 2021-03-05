@@ -1,17 +1,18 @@
 import { useCallback } from 'react';
 import { useTrackedState, useSetDraft } from '../store';
 
-export const useLoading = () => {
+export const useTabInfo = () => {
     const state = useTrackedState();
-    const getLoading = () => state.loading;
+    const getActiveTab = () => state.activeTab;
     const setDraft = useSetDraft();
-    const toggleLoading = useCallback(
-        (loading) => {
+
+    const setActivetab = useCallback(
+        (selectedTab) => {
             setDraft((draft) => {
-                draft.loading = loading;
+                draft.activeTab = selectedTab;
             });
         },
         [setDraft]
     );
-    return { getLoading, toggleLoading };
+    return { getActiveTab, setActivetab };
 };

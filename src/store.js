@@ -2,10 +2,18 @@ import { useState, useCallback } from 'react';
 import { createContainer } from 'react-tracked';
 import produce from 'immer';
 
-
 const initialState = {
     repositories: [],
     contributors: [],
+    activeRepo: {
+        repoDetail: {},
+        contributors: []
+    },
+    activeContributor: {
+        contributorDetail: {},
+        repositories: []
+    },
+    repoContributors: {},
     dropdownToggle: false,
     sortConfig: {
         key: '',
@@ -17,23 +25,24 @@ const initialState = {
         pageCount: null
     },
     organization: 'angular',
-    loading: null
+    activeTab: '1',
+    loading: true
 };
 
 const useValue = () => useState(initialState);
 
 const { Provider, useTrackedState, useUpdate: useSetState } = createContainer(
-  useValue,
+    useValue
 );
 
 const useSetDraft = () => {
-  const setState = useSetState();
-  return useCallback(
-    draftUpdater => {
-      setState(produce(draftUpdater));
-    },
-    [setState],
-  );
+    const setState = useSetState();
+    return useCallback(
+        (draftUpdater) => {
+            setState(produce(draftUpdater));
+        },
+        [setState]
+    );
 };
 
 export { Provider, useTrackedState, useSetDraft };
