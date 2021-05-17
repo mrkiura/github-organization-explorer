@@ -1,12 +1,12 @@
-# Angular Rank
+# Github Organization Explorer
 
 An application that provides information for an Organization's repositories and contributors on Github.
 
-The default organization is Angular, but the app is flexible enough to allow you to use it to search for any organization you would like to see.
+The default organization provided is Angular, but the app is flexible enough to allow you to use it to search for any organization you would like to see.
 
 You can test it out [here](https://sleepy-roentgen-69d6c8.netlify.app)
 
-The application aims to achieve the following:
+
 ## Scope: Repository
 
 * Get all contributors for a repository
@@ -25,8 +25,8 @@ The application aims to achieve the following:
 ## Setup
 
 ```
-$ git clone git@bitbucket.org:alex_kiura/angular-rank.git
-$ cd angular-rank
+$ git clone git@github.com:mrkiura/github-organization-explorer.git
+$ cd github-organization-explorer
 $ yarn install
 ```
 
